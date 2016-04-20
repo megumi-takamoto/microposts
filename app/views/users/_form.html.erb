@@ -1,0 +1,74 @@
+<!-- form_forで書き出されるformタグにclass属性'form-horizontal'を付与するためにhtml: {class: 'form-horizontal'}をつけました。 -->
+<%= form_for(@user, html: {class: 'form-horizontal'}) do |f| %>
+<!--ココにformタグがありましたが、formタグはform_forというメソッドで書き出されるので必要無いです。<form><form></form></form>となってしまいます-->
+  <div class="form-group">
+    <label for="user_name" class="col-sm-2 control-label">名前</label>
+    <div class="col-sm-10">
+      <!-- f.text_fieldは<input type="text">タグを書き出します。 -->
+      <!-- bootstrapの指定であるclass名'form-control'を付与するため class: 'form-horizontal'を追加しました-->
+      <%= f.text_field :name, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="user_email" class="col-sm-2 control-label">Email</label>
+    <div class="col-sm-10">
+      <%= f.text_field :email, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="user_password" class="col-sm-2 control-label">パスワード</label>
+    <div class="col-sm-10">
+    <!-- f.password_fieldは<input type="password">タグを書き出します。 -->
+      <%= f.password_field :password, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="user_password_confirmation" class="col-sm-2 control-label">パスワード（確認）</label>
+    <div class="col-sm-10">
+      <%= f.password_field :password_confirmation, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="user_nmd" class="col-sm-2 control-label">生年月日</label>
+    <div class="col-sm-10">
+      <!-- nmdはdate型なので日付を選択させるような<select>タグが必要です。その為のヘルパーはf.date_fieldがありますのでそれを使ってみます。。 -->
+      <!-- 参考URL = http://railsdoc.com/references/date_field -->
+      <%= f.date_field :nmd, class: 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="col-sm-2 control-label">性別</label>
+    <div class="col-sm-10">
+      <!-- db/schema.rbを見るとgenderではなくsexというカラム名になっているのでそれを使います -->
+      <!-- 択一の場合はradioボタンを使いますがそのためのフォームヘルパーはf.radio_buttonを利用できます -->
+      <!-- 参考URL = http://railsdoc.com/references/radio_button -->
+      <!-- ココのbootstrapの指定の仕方はこちらを参考に = http://getbootstrap.com/css/#inline-checkboxes-and-radios -->
+      <label class="radio-inline">
+        <!-- db/schema.rbを見るとsexはinteger（整数）になっていますので、男を0、女を1とします -->
+        <%= f.radio_button :sex, 0, checked: @user.sex == 0 %> 男
+      </label>
+      <label class="radio-inline">
+        <%= f.radio_button :sex, 1, checked: @user.sex == 1 %> 女
+      </label>
+    </div>
+  </div>
+  <!-- ？？地域のフォームがありましたが、db/schema.rbを見ると該当するカラムがまだ追加されていないようですね -->
+  <!-- 追加したい場合は rails g migration AddAreaToUser area:string などを実行してカラムを作ってから改めてフォームを設置しましょう -->
+  <div class="form-group">
+      <label class="col-sm-2 control-label">プロフィール</label>
+      <div class="col-sm-10">
+         <!-- <textarea name="opinion" cols="40" rows="10" maxlength="400" placeholder="自己紹介"></textarea> -->
+         <!-- と直接<textareaタグが書かれていましたがフォームヘルパー(f.text_area)を利用したほうが良いです -->
+         <!-- db/schema.rbを見ると該当するカラムはcontentのようですのでそれを使います -->
+         <%= f.text_area :content, class: 'form-control' %>
+      </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <!-- <input type="submit" valur="送信" />とinput type="submit"タグについても直接書かずになるべくフォームヘルパーを利用しましょう。-->
+      <%= f.submit '送信', class: 'btn btn-default' %>
+    </div>
+  </div>
+<% end %>
+<!-- 全体のフォームについてはbootstrapのこのURLを参考に作っています　-->
+<!-- http://getbootstrap.com/css/#forms-horizontal -->
