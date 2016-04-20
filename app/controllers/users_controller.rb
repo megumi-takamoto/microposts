@@ -8,6 +8,9 @@ class UsersController < ApplicationController
     @user = User.new
   end
   
+  def index
+  end
+  
   def update
     if @user.update(user_params)
      #保存に成功した場合はトップぺージにリダイレクト
