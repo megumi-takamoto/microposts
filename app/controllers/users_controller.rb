@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+before_action :logged_in_user , only: [:edit , :update ]
+before_action :my_self , only: [:edit , :update ]
+
   
   def show
     @user = User.find(params[:id])
@@ -11,10 +14,15 @@ class UsersController < ApplicationController
   def index
   end
   
+  def edit
+    @user = User.find(params[:id])
+  end
+  
   def update
+    @user = User.find(params[:id])
     if @user.update(user_params)
      #保存に成功した場合はトップぺージにリダイレクト
-     redirect_to root_path , notice: 'メッセージを編集しました'
+     redirect_to @user , notice: 'プロフィールを変更しました。'
     else
       #保存に失敗した場合は編集画面へ戻す
       render 'edit'
@@ -36,4 +44,13 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:name, :email, :password, :nmd, :sex, :content, :password_confirmation)
   end
+  
+  def my_self
+    @user = User.find(params[:id])
+    if @user == current_user
+    else
+      redirect_to root_path , notice: '本人のアカウントのみ変更可能です。'
+    end
+  end  
+  
 end
